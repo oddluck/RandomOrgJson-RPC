@@ -57,18 +57,27 @@ namespace Demot.RandomOrgApi
              advisoryDelay;
         Random rand;
         string apiKey,
-               hashedKey;
+               hashedKey,
+               userAgent;
 
         /// <summary>
         /// Intializes a new instance of the RandomOrgApiClient.
         /// </summary>
         /// <param name="apiKey">API key, used to keep track of the true random bit usage.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public RandomOrgApiClient(string apiKey) {
+        public RandomOrgApiClient(string apiKey) : this(apiKey, null) { }
+        /// <summary>
+        /// Intializes a new instance of the RandomOrgApiClient.
+        /// </summary>
+        /// <param name="apiKey">API key, used to keep track of the true random bit usage.</param>
+        /// <param name="userAgent">The user agent string to send with requests.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public RandomOrgApiClient(string apiKey, string userAgent) {
             if(String.IsNullOrWhiteSpace(apiKey))
                 throw new ArgumentNullException("apiKey should contain a valid key.");
-            
+
             this.apiKey = apiKey;
+            this.userAgent = userAgent;
             this.MaxBlockingTime = 3000;
             this.rand = new Random();
         }
@@ -568,6 +577,7 @@ namespace Demot.RandomOrgApi
             var httpRequest = WebRequest.Create(BaseUrl) as HttpWebRequest;
             httpRequest.Method = "POST";
             httpRequest.ContentType = ContentType;
+            httpRequest.UserAgent = this.userAgent;
             try {
                 using(var requestStream = httpRequest.GetRequestStream())
                     requestStream.Write(content, 0, content.Length);
