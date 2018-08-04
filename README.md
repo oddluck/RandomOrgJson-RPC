@@ -1,3 +1,5 @@
+Ported to .Net Core 2.1 https://www.microsoft.com/net/download
+
 RandomOrgJson-RPC
 =================
 
